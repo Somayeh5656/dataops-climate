@@ -13,20 +13,20 @@ def test_bronze():
     # Expected columns
     expected_cols = {'date', 'meantemp', 'humidity', 'wind_speed', 'meanpressure', 'batch_id', 'ingestion_time'}
     assert expected_cols.issubset(set(bronze.columns)), f"Bronze missing columns: {expected_cols - set(bronze.columns)}"
-    print("✓ Bronze has all expected columns.")
+    print(" Bronze has all expected columns.")
     
     # No nulls in date
     assert bronze['date'].notna().all(), "Bronze has null dates!"
-    print("✓ Bronze has no null dates.")
+    print(" Bronze has no null dates.")
     
     # Row count (should be around 1460)
     total_rows = len(bronze)
     assert total_rows >= 1450, f"Bronze row count too low: {total_rows}"
-    print(f"✓ Bronze row count: {total_rows} (expected ~1460).")
+    print(f" Bronze row count: {total_rows} (expected ~1460).")
     
     # Batch_id present and non-null
     assert bronze['batch_id'].notna().all(), "Bronze has null batch_id!"
-    print("✓ Bronze batch_id present.")
+    print(" Bronze batch_id present.")
     
     return bronze
 
@@ -76,7 +76,7 @@ def test_gold():
     assert any('_lag1' in col for col in gold.columns), "Gold missing lag1 features"
     assert any('_lag7' in col for col in gold.columns), "Gold missing lag7 features"
     assert any('_roll7_avg' in col for col in gold.columns), "Gold missing rolling averages"
-    print("✓ Gold has expected feature columns.")
+    print(" Gold has expected feature columns.")
     
     # No nulls in target or lags (except first rows which were dropped)
     assert gold['target'].notna().all(), "Gold has null target!"
