@@ -47,14 +47,14 @@ def test_silver():
     # No nulls in core columns
     for col in ['meantemp', 'humidity', 'wind_speed', 'meanpressure']:
         assert silver[col].notna().all(), f"Silver has nulls in {col}!"
-    print("✓ Silver has no nulls in core columns.")
+    print(" Silver has no nulls in core columns.")
     
     # Value ranges
     assert silver['meantemp'].between(-10, 50).all(), "meantemp out of range"
     assert silver['humidity'].between(0, 100).all(), "humidity out of range"
     assert silver['wind_speed'].between(0, 200).all(), "wind_speed out of range"
     assert silver['meanpressure'].between(900, 1100).all(), "meanpressure out of range"
-    print("✓ Silver values are within expected ranges.")
+    print(" Silver values are within expected ranges.")
     
     # Row count (should be <= Bronze, around 1450)
     bronze_rows = len(DeltaTable("data/delta/bronze").to_pandas())
@@ -71,7 +71,7 @@ def test_gold():
     
     # Expected columns (target + lags + rolling)
     expected_prefixes = ['date', 'target', '_lag1', '_lag7', '_roll7_avg']
-    # Just check that at least some of these exist
+
     assert 'target' in gold.columns, "Gold missing target column"
     assert any('_lag1' in col for col in gold.columns), "Gold missing lag1 features"
     assert any('_lag7' in col for col in gold.columns), "Gold missing lag7 features"
