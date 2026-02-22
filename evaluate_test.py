@@ -51,9 +51,9 @@ combined['target'] = combined['meantemp'].shift(-1)
 # Drop rows with NaN (first 7 rows and last row)
 combined = combined.dropna().reset_index(drop=True)
 
-# ----------------------------
+
 # 4. Split back into train and test sets
-# ----------------------------
+
 train_dates = set(silver['date'])
 test_dates = set(test_raw['date'])
 
@@ -68,9 +68,9 @@ y_test = test_features['target']
 
 print(f"Test features shape: {X_test.shape}")
 
-# ----------------------------
+
 # 5. Load the latest model from MLflow
-# ----------------------------
+
 print("Loading latest model from MLflow...")
 client = mlflow.tracking.MlflowClient()
 experiment = client.get_experiment_by_name("ClimateForecast")
@@ -87,14 +87,13 @@ model_uri = f"runs:/{run_id}/model"
 model = mlflow.xgboost.load_model(model_uri)
 print(f"Loaded model from run {run_id}")
 
-# --- FIX: Reorder features to match model's expected order ---
+#  Reorder features to match model's expected order ---
 expected_features = model.get_booster().feature_names
 print(f"Model expects features: {expected_features}")
 X_test = X_test[expected_features]
 
-# ----------------------------
 # 6. Predict and evaluate
-# ----------------------------
+
 y_pred = model.predict(X_test)
 rmse = np.sqrt(mean_squared_error(y_test, y_pred))
 mae = mean_absolute_error(y_test, y_pred)
@@ -102,9 +101,9 @@ mae = mean_absolute_error(y_test, y_pred)
 print(f"Test RMSE: {rmse:.4f}")
 print(f"Test MAE: {mae:.4f}")
 
-# ----------------------------
+
 # 7. Log results to MLflow 
-# ----------------------------
+
 with mlflow.start_run(run_name="test_evaluation"):
     mlflow.log_params({
         "model_run_id": run_id,
