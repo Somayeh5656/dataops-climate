@@ -4,3 +4,5 @@ __pycache__/
 data/delta/
 processed_batches.txt
 *.log
+
+mlruns/
